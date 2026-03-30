@@ -348,8 +348,17 @@ function getValidSlots(dateKey, dur){
   return allSlots.filter(s=>{
     const h=parseInt(s.split(':')[0]);
     for(let i=1;i<dur;i++){
-      const needed=String(h+i).padStart(2,'0')+':00';
-      if(!allSlots.includes(needed))return false;
+      const nextH=(h+i)%24;
+      const needed=String(nextH).padStart(2,'0')+':00';
+      if(h+i>=24){
+        const nextDate=new Date(sDate);
+        nextDate.setDate(nextDate.getDate()+1);
+        const nextKey=fk(nextDate);
+        const nextAvail=curAvail[nextKey]||[];
+        if(!nextAvail.includes(needed))return false;
+      } else {
+        if(!allSlots.includes(needed))return false;
+      }
     }
     return true;
   });
