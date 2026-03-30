@@ -280,7 +280,7 @@ footer p{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0
 <footer><p>Le Laboratoire Studio &mdash; Sessions d'enregistrement professionnelles</p></footer>
 
 <script>
-const SURL='/.netlify/functions/getSlots';
+const SURL='/slots.json';
 let vy=new Date().getFullYear(),vm=new Date().getMonth();
 let sDate=null,sSlot=null,sDur=null,sStudio='A',availA={},availB={};
 const MOS=['Janvier','F\u00e9vrier','Mars','Avril','Mai','Juin','Juillet','A\u00fb\u0074','Septembre','Octobre','Novembre','D\u00e9cembre'];
@@ -316,7 +316,7 @@ async function load(){
     return;
   }
   try{
-    const r=await fetch(SURL+'?action=getSlots');
+    const r=await fetch('/slots.json');
     const d=await r.json();
     availA=d.slotsA||{};availB=d.slotsB||{};
   }catch(e){console.log('Erreur fetch:',e);}
