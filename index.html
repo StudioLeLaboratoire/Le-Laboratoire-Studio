@@ -126,7 +126,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,10vw,110px);letter-s
 .car-track-wrap{position:relative;display:flex;align-items:center;gap:8px}
 .car-track{display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;padding:4px 2px 12px;flex:1}
 .car-track::-webkit-scrollbar{display:none}
-.car-card{flex:0 0 160px;cursor:default}
+.car-card{flex:0 0 160px;cursor:default}@media(max-width:400px){.car-card{flex:0 0 140px}.car-img-wrap{width:140px;height:175px}}
 .car-img-wrap{width:160px;height:200px;overflow:hidden;border-radius:4px;border:1px solid var(--brd);transition:border-color 0.3s}
 .car-card:hover .car-img-wrap{border-color:var(--purm)}
 .car-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s}
@@ -335,7 +335,25 @@ function selStudio(s,el){
   rc();
 }
 
-function carScroll(dir){const t=document.getElementById('car-track');t.scrollBy({left:dir*360,behavior:'smooth'});}
+function carScroll(dir){
+  const t=document.getElementById('car-track');
+  const cardW=t.querySelector('.car-card').offsetWidth+12;
+  t.scrollBy({left:dir*cardW,behavior:'smooth'});
+}
+// Swipe support mobile
+(function(){
+  let startX=0;
+  const t=document.getElementById('car-track');
+  if(!t)return;
+  t.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;},{passive:true});
+  t.addEventListener('touchend',e=>{
+    const diff=startX-e.changedTouches[0].clientX;
+    if(Math.abs(diff)>40){
+      const cardW=t.querySelector('.car-card').offsetWidth+12;
+      t.scrollBy({left:diff>0?cardW:-cardW,behavior:'smooth'});
+    }
+  },{passive:true});
+})();
 async function load(){
   if(SURL==='VOTRE_URL_APPS_SCRIPT'){
     const t=new Date();t.setHours(0,0,0,0);
